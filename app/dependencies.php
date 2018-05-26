@@ -33,13 +33,13 @@ $container['view'] = function ($container) {
         'all' => $container->role->getRoles(),
     ]); //, $container->role);
 
-    $view->getEnvironment()->addGlobal('department', [
+    /*$view->getEnvironment()->addGlobal('department', [
         'all' => $container->department->getDepartments(),
-    ]);
-
+    ]);*/
+/*
     $view->getEnvironment()->addGlobal('site', [
         'all' => $container->site->getSites(),
-    ]);
+    ]);*/
     return $view;
 };
 
