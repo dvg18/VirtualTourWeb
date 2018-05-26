@@ -1,0 +1,15 @@
+/app/settings.php
+/vendor/
+/logs/*
+/log/*
+/cache/*
+/.idea/*
+/directory/*
+.env
+phinx.yml
+!/logs/README.md
+
+
+
+
+

@@ -1,0 +1,124 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+<div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-2">
+            <div class="title">
+                <h2>Сайт</h2>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Добавить сайт</div>
+                <div class="panel-body">
+                    {#пути site.create пока нет#}
+                    <form id="add_site" action="{{ path_for('site.create') }}" method="post" autocomplete="off">
+                        <div class="form-group">
+                            <label for="site_name">Название сайта</label>
+                            <input type="text" name="site_name" id="site_name" placeholder="www.google.com" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="owner_id">Владелец сайта</label>
+                            <select class="form-control" id="owner_id" name="owner_id">
+                                <!--заполняется с помощью ajax-->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="widget_settings">Настройи виджета</label>
+                            {#<input type="text" name="widget_settings" id="widget_settings" placeholder="" class="form-control" required>#}
+                            <textarea rows="10" style="white-space:pre-line" name="widget_settings" id="widget_settings" placeholder="Введите настройки в json-формате" class="form-control" required>
+                                {
+                                     "color": "blue",
+                                     "chatIcon": "chat.ico",
+                                     "position": 4,
+                                     "logoChatWindow": "logo.png",
+                                     "titleChatWindow": "Chat"
+                                }
+                            </textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-lg btn-success btn-block">Добавить</button>
+
+                        {{ csrf.field | raw }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    // Используем немедленно вызываемую функцию
+    (function () {
+        "use strict";
+        jQuery(function () {
+            //получаем owner'ов
+            $.ajax({
+                type: "GET",
+                url: "/user/role/1",
+                dataType: "json",
+                data: "",
+                error: function () {
+                    alert( "При выполнении запроса произошла ошибка :(" );
+                },
+                success: function ( data ) {
+                    for ( var i = 0; i < data.length; i++ ) {
+                        // Каждое полученное значение вставим в список видов транспорта
+                        $( '#owner_id' ).append( '<option value="' + data[i].id + '">' + data[i].first_name + ' ' + data[i].last_name +'</option>' );
+                    }
+                }
+            });
+        });
+
+    })();
+
+    $(document).ready(function () {
+        //добавление сайта
+        $('#add_site').on('submit',function (e) {
+            e.preventDefault();
+            //парсим json
+            try {
+                var settings = JSON.parse($('#widget_settings').val());
+            }
+            catch (e) {
+                console.log(e);
+                alert('json parse error');
+                return;
+            };
+            //проверяем наличие всех полей в json
+            if ( !settings['color'] || !settings['chatIcon'] || !settings['position'] || !settings['logoChatWindow'] || !settings['titleChatWindow']){
+                alert('you have to fill: color, chatIcon, position, logoChatWindow, titleChatWindow');
+                return;
+            }
+            //сохраняем сайт
+            try{
+                $.ajax({
+                    type: "post",
+                    url: "/site/create",
+                    dataType: "json",
+                    data: {
+                        site_name:$('#site_name').val(),
+                        owner_id:$('#owner_id').val(),
+                        widget_settings:settings
+                    },
+                    error: function () {
+                        alert( "При выполнении запроса произошла ошибка :(" );
+                    },
+                    success: function ( data ) {
+                        console.log(data);
+                        alert("Успешно");
+                    }
+                });
+            }
+            catch (e){
+                console.log(e);
+                return;
+            };
+        });
+    });
+
+
+</script>
+{% endblock %}

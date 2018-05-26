@@ -1,0 +1,54 @@
+<div class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav" id="side-menu">
+            <!--первый блок-->
+            <li>
+                <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Пользователи<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+
+                    <li>
+                        <a href="{{ path_for('user.create') }}">Добавить</a>
+                    </li>
+                    <li>
+                        <a href="{{ path_for('user.all') }}">Просмотр</a>
+                    </li>
+                </ul>
+            </li>
+            <!--второй блок-->
+            <li>
+                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Сайты<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{ path_for('site.create') }}">Добавить</a>
+                    </li>
+                    <li>
+                        <a href="{{ path_for('site') }}">Просмотр</a>
+                    </li>
+                </ul>
+                <!-- /.nav-second-level -->
+            </li>
+            <!--четвёрты блок-->
+            <li>
+                <a href="forms.html"><i class="fa fa-edit fa-fw"></i>Отделы<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{ path_for('department.create') }}">Добавить</a>
+                    </li>
+                    <li>
+                        <a href="{{ path_for('department') }}">Просмотр</a>
+                    </li>
+                </ul>
+            </li>
+            <!--пятый блок-->
+            <li>
+                <a href="forms.html"><i class="fa fa-edit fa-fw"></i>История разговоров<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="/chat">Просмотр</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- /.sidebar-collapse -->
+</div>

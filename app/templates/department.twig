@@ -1,0 +1,38 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-2">
+                <div class="title">
+                    <h2>Отдел</h2>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Добавить отдел</div>
+                    <div class="panel-body">
+                        <form action="{{ path_for('department.create') }}" method="post" autocomplete="off">
+                            <div class="form-group">
+                                <label for="site_id">Сайт</label>
+                                <select class="form-control" id="site_id" name="site_id">
+                                    {% for i in site.all %}
+                                        <option value='{{ i.id }}'>{{ i.site_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="department_name">Название</label>
+                                <input type="text" name="department_name" id="department_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Описание</label>
+                                <textarea type="text" name="description" id="description" class="form-control" > </textarea>
+                            </div>
+                            <button type="submit" class="btn btn-lg btn-success btn-block">Добавить</button>
+                            {#{{ csrf.field | raw }}#}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

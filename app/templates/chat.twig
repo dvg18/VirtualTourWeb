@@ -1,0 +1,395 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+        <div class="col-lg-12">
+            <h1 class="page-header">История диалогов</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <form id="filter" action="" method="GET">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <strong>Дата от:</strong>
+                                <input type="date" id="date_from" class="form-control">
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Дата до:</strong>
+                                <input type="date" id="date_to" class="form-control">
+                            </div>
+                            <div class="col-xs-2">
+                                <strong>Оператор</strong>
+                                <select id="user_id" class="form-control">
+                                </select>
+                            </div>
+                            <div class="col-xs-2">
+                                <strong>Сайт</strong>
+                                <select id="site_id" class="form-control">
+                                </select>
+                            </div>
+                            <div class="col-lg-2">
+                                <h1></h1>
+                            </div>
+                            <div class="col-xs-2">
+                                <input id="submit" type="submit" value="Найти"  class="btn btn-success rm-relish"/>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h1></h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <strong>История диалогов</strong>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <table width="100%" class="table table-striped table-bordered table-hover"
+                                           id="dataTables"></table>
+                                </div>
+                                <!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-wrapper -->
+        </div>
+    </div>
+    </div>
+    <!-- /#wrapper -->
+
+    <!--Modal window "история диалогов"-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="history_dialogue"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="history_dialogueLabel">Чат</h2>
+                    <div class="modal-body">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="col-xs-3">
+                                    <strong>Дата:</strong>
+                                <div id="dialogWrapper1">
+
+                                </div>
+                                </div>
+                                <div class="col-xs-3">
+                                   <strong> Имя:</strong>
+                                    <div id="dialogWrapper2">
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong>Сообщение:</strong>
+                                    <div id="dialogWrapper3">
+
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!--Modal window "профиль оператора"-->
+    <div class="modal fade" id="operator_profile" tabindex="-1" role="dialog" aria-labelledby="operator_profile"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="operator_profileLabel">Профиль оператора</h2>
+                    <div class="modal-body">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal window "профиль посетителя"-->
+    <div class="modal fade" id="vizitor_profile" tabindex="-1" role="dialog" aria-labelledby="operator_profile"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="vizitor_profileleLabel">Профиль посетителя</h2>
+                    <div class="modal-body">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /*Отправка на сервер резултатов фильтра*/
+        function myRow(id, date, operator, visitor, messages) {
+            this.id = id;
+            this.Date = date;
+            this.Operator = operator;
+            this.Visitor = visitor;
+            //this.Messages = messages;
+            //myDialog = JSON.parse(messages);
+        }
+
+        var myData;
+        $(document).ready(function () {
+            var parsedData = JSON.parse(testMethod());
+            myData = parsedData;
+            console.log(myData);
+            var thedata = Extract(parsedData);
+
+            $('#filter').on('submit', function (e) {
+                e.preventDefault();
+                console.log('sds');
+                Filter($('#date_from').val(), $('#date_to').val(), $('#user_id').val());
+            });
+
+            var t = $('#dataTables').DataTable({
+//            data: jQuery.parseJSON(thedata),
+                data: thedata,
+                "processing": true,
+                language: {
+                    "processing": "Подождите...",
+                    "search": "Поиск:",
+                    "lengthMenu": "Показать _MENU_ записей",
+                    "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                    "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                    "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                    "infoPostFix": "",
+                    "loadingRecords": "Загрузка записей...",
+                    "zeroRecords": "Записи отсутствуют.",
+                    "emptyTable": "В таблице отсутствуют данные",
+                    "paginate": {
+                        "first": "Первая",
+                        "previous": "Предыдущая",
+                        "next": "Следующая",
+                        "last": "Последняя"
+                    },
+                    "aria": {
+                        "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                        "sortDescending": ": активировать для сортировки столбца по убыванию"
+                    }
+                },
+                "columns": [
+                    {"data": "id", "title": "id"},
+                    {"data": "Date", "title": "Дата"},
+                    {"data": "Operator", "title": "Оператор"},
+                    {"data": "Visitor", "title": "Посетитель"},
+                    {
+                        "data": function () {
+                            return '<div class="openmodal" href="" data-toggle="modal" data-target="#myModal" data-whatever="">открыть диалог</div>'
+                        }, "title": "Диалог"
+                    }
+                ]
+
+            });
+
+            function testMethod() {
+                var jdata;
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    async: false,
+                    url: "/chat",
+                    data: "date_from=2017-01-01 01:01:01",  //добавил для отладки, от этой даты есть диалоги у меня в БД. Т.к. без фильров ищет диалоги за вчера и сегодня, а в базе нет диалогов за вчера и сегодня, а добавлять лень было
+                    contentType: "application/json; charset=utf-8"
+                }).done(function (result) {
+                    //console.log(result);
+                    jdata = result;
+
+                    return jdata;
+                }).fail(function (xhr, result, status) {
+                    alert('Alert ' + xhr.statusText + ' ' + xhr.responseText + ' ' + xhr.status);
+                });
+                return jdata;
+            }
+
+            function Filter(dateFrom, dateTo, userId) {
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: "/chat",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        date_from: dateFrom,
+                        date_to: dateTo,
+                        //   user_id:userId
+                    }
+                }).done(function (result) {
+
+                    var respData = JSON.parse(result);
+                    var mess = JSON.parse(respData.data['0'].text);
+                    var dataToTable = Extract(respData);
+                    myData = respData;
+                    console.log(respData);
+                    console.log(mess);
+                    t.clear();
+                    t.rows.add(dataToTable);
+                    t.draw()
+                }).fail(function (xhr, result, status) {
+                    alert('GetPermissions ' + xhr.statusText + ' ' + xhr.responseText + ' ' + xhr.status);
+                });
+            }
+
+            function Extract(parsedData) {
+                var outputData = [];
+
+                $.each(parsedData['data'], function (index, row) {
+                    var tempRow = new myRow(row['id'], row['date'], row['user']['first_name'] + " " + row['user']['last_name'], row['visitor']['name']);
+                    /*row ['text'] /!*['text']['messages']*!/);*/
+                    outputData.push(tempRow);
+                });
+                return outputData;
+            }
+
+            $('#myModal').on('show.bs.modal', function (e) {
+                var id = $(e.relatedTarget).parent().prev().prev().prev().prev().text();
+                //$('.panel-body').text('hello!');
+                var arr = myData.data;
+                arr.forEach(function (key, i) {
+                    if (key.id === id) {
+                        var mess = JSON.parse(key.text);
+                        console.log(mess);
+                        showDialog(mess);
+                    }
+                });
+
+            });
+            $('#myModal').on('hide.bs.modal', function () {
+                $('#dialogWrapper1').empty();
+                $('#dialogWrapper2').empty();
+                $('#dialogWrapper3').empty();
+            });
+
+            function showDialog(obj) {
+                obj.messages.forEach(function (key) {
+                    var $elem = $('<div class="wrapper__message"></div>');
+                    var $date = $('<div class="wrapper__message__date"></div>');
+                    var $name = $('<div class="wrapper__message__name"></div>');
+                    var $text = $('<div class="wrapper__message__text"></div>');
+                    var name = 'unknown';
+                    var id;
+                    if (key[obj.user.id]) {
+                        id = obj.user.id;
+                        name = obj.user.name; }
+                    else {
+                        id = obj.visitor.id;
+                        name = obj.visitor.name;
+                    }
+                    $text.text(key[id]);
+                    $date.text(key.datetime);
+                    $name.text(name);
+                    $elem.append($name).append($date).append($text);
+                    /*$('#dialogWrapper').append($elem);*/
+                    $('#dialogWrapper1').append($date);
+                    $('#dialogWrapper2').append($name);
+                    $('#dialogWrapper3').append($text);
+                });
+            }
+            $( '#site_id' ).find('option').remove().end(); //удаляем старые значения
+            $.ajax({
+                type: "GET", // Тип запроса
+                url: "/sites", // Путь к сценарию, обработающему запрос
+                dataType: "json", // Тип данных, в которых сервер должен прислать ответ
+                data: "", // Строка запроса
+                error: function () { // Обработчик, который будет запущен в случае неудачного запроса
+                    alert( "При выполнении запроса произошла ошибка :(" ); // Сообщение о неудачном запросе
+                },
+                success: function ( data ) { // Обработчик, который будет запущен после успешного запроса
+                    // В ответ на наш запрос сервер должен прислать массив значений
+                    // Мы его вставим в поле второго списка с помощью цикла for
+                    for ( var i = 0; i < data.length; i++ ) {
+                        // Каждое полученное значение вставим в список видов транспорта
+                        $( '#site_id' ).append( '<option value="' + data[i].id + '">' + data[i].site_name + '</option>' );
+                    }
+                }
+            });
+
+            $( '#user_id' ).find('option').remove().end(); //удаляем старые значения
+            $.ajax({
+                type: "GET", // Тип запроса
+                url: "/operators", // Путь к сценарию, обработающему запрос
+                dataType: "json", // Тип данных, в которых сервер должен прислать ответ
+                data: "", // Строка запроса
+                error: function () { // Обработчик, который будет запущен в случае неудачного запроса
+                    alert( "При выполнении запроса произошла ошибка :(" ); // Сообщение о неудачном запросе
+                },
+                success: function ( data ) { // Обработчик, который будет запущен после успешного запроса
+                    // В ответ на наш запрос сервер должен прислать массив значений
+                    // Мы его вставим в поле второго списка с помощью цикла for
+                    for ( var i = 0; i < data.length; i++ ) {
+                        // Каждое полученное значение вставим в список видов транспорта
+                        $( '#user_id' ).append( '<option value="' + data[i].id + '">' + data[i].last_name + ' ' + data[i].first_name +'</option>' );
+                    }
+                }
+            });
+        });
+
+    </script>
+    <script>
+        // Используем немедленно вызываемую функцию
+        (function () {
+            // Будем работать в соответствии с требованиями современного стандарта
+            // ECMAScript. Включим строгий режим.
+            "use strict";
+            // Весь наш основной сценарий будет работать уже после загрузки документа
+            jQuery(function () {
+                // Пишем обработчик события для выбора значения в списке
+                // Нас интересует событие изменения значения поля
+                $( '#site_id' ).change(function () {
+
+                    var site_id = $( this ).val();
+                    $( '#user_id' ).find('option').remove().end(); //удаляем старые значения
+
+                    $.ajax({
+                        type: "GET", // Тип запроса
+                        url: "/operators", // Путь к сценарию, обработающему запрос
+                        dataType: "json", // Тип данных, в которых сервер должен прислать ответ
+                        data: "site_id="+site_id, // Строка запроса
+                        error: function () { // Обработчик, который будет запущен в случае неудачного запроса
+                            alert( "При выполнении запроса произошла ошибка :(" ); // Сообщение о неудачном запросе
+                        },
+                        success: function ( data ) { // Обработчик, который будет запущен после успешного запроса
+                            // В ответ на наш запрос сервер должен прислать массив значений
+                            // Мы его вставим в поле второго списка с помощью цикла for
+                            for ( var i = 0; i < data.length; i++ ) {
+                                // Каждое полученное значение вставим в список видов транспорта
+                                $( '#user_id' ).append( '<option value="' + data[i].id + '">' + data[i].last_name + data[i].first_name +'</option>' );
+                            }
+                        }
+                    });
+                });
+            }); // Функция ожидания загрузки документа jQuery
+        })(); // Немедленно вызываемая функция
+    </script>
+{% endblock %}
+

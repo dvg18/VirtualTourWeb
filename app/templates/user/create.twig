@@ -1,0 +1,164 @@
+{% extends 'layout.twig' %}
+{% block content %}
+<div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-2">
+            <div class="title">
+                <h2>Пользователь</h2>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Добавить пользователя</div>
+                <div class="panel-body">
+                    <form action="{{ path_for('user.create') }}" method="post" autocomplete="off">
+                        <div class="form-group{{ errors.login ? ' has-error' : '' }}">
+                            <label for="login">Логин</label>
+                            <input type="text" name="login" id="login" placeholder="" value="{{ old.login }}"
+                                   class="form-control">
+                            {% if errors.login %}
+                                <span class="help-block"> {{ errors.login | first }} </span>
+                            {% endif %}
+                        </div>
+                        <div class="form-group{{ errors.password ? ' has-error' : '' }}">
+                            <label for="password">Пароль</label>
+                            <input type="password" name="password" id="password" value="{{ old.password }}"
+                                   class="form-control">
+                            {% if errors.password %}
+                                <span class="help-block"> {{ errors.password | first }} </span>
+                            {% endif %}
+                        </div>
+                        <div class="form-group{{ errors.last_name ? ' has-error' : '' }}">
+                            <label for="last_name">Фамилия</label>
+                            <input type="text" name="last_name" id="last_name" placeholder="" value="{{ old.last_name }}"
+                                   class="form-control">
+                            {% if errors.last_name %}
+                                <span class="help-block"> {{ errors.last_name | first }} </span>
+                            {% endif %}
+                        </div>
+                        <div class="form-group{{ errors.first_name ? ' has-error' : '' }}">
+                            <label for="first_name">Имя</label>
+                            <input type="text" name="first_name" id="first_name" placeholder="" value="{{ old.first_name }}"
+                                   class="form-control">
+                            {% if errors.first_name %}
+                                <span class="help-block"> {{ errors.first_name | first }} </span>
+                            {% endif %}
+                        </div>
+                        <fieldset class="form-group">
+                            <label for="is_blocked">Заблокирован</label>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="is_blocked" id="is_blocked" value="1">
+                                    Да
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="is_blocked" id="is_blocked" value="0" checked>
+                                    Нет
+                                </label>
+                            </div>
+                        </fieldset>
+                        <div class="form-group">
+                            <label for="role_id">Роль</label>
+                            <select class="form-control" id="role_id" name="role_id">
+                                {% for i in role.all %}
+                                    <option value='{{ i.role_id }}'>{{ i.role_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="site_id">Сайт</label>
+                            <select class="form-control" id="site_id" name="site_id" disabled>
+                                {% for i in site.all %}
+                                    <option value='{{ i.id }}'>{{ i.site_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="department_id">Отдел</label>
+                            <select class="form-control" id="department_id" name="department_id" disabled>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="info">Информация</label>
+                            <input type="text" name="info" id="info" placeholder="Не обязательно" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-success btn-block">Добавить</button>
+
+                        {{ csrf.field | raw }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    // Используем немедленно вызываемую функцию
+    (function () {
+        // Будем работать в соответствии с требованиями современного стандарта
+        // ECMAScript. Включим строгий режим.
+        "use strict";
+        // Весь наш основной сценарий будет работать уже после загрузки документа
+        jQuery(function () {
+            // Пишем обработчик события для выбора значения в списке
+            // Нас интересует событие изменения значения поля
+            $( '#role_id' ).change(function () {
+                $( '#site_id, #department_id' ).prop( 'disabled',true ); // Делаем поля неактивными
+                // Сохраним выбранное значение списка в переменную
+                var role_id = $( this ).val();
+                var site_id = $(  '#site_id' ).val();
+                // Если выбрано значение по умолчанию, ничего не делаем
+                if (role_id === 0) { return; }
+                if (role_id == 3) {
+                    $('#site_id').prop('disabled', false); // Включаем поля
+                    $('#department_id').find('option').remove().end() //удаляем старые значения
+                        .prop('disabled', false);
+                    $.ajax({
+                        type: "GET", // Тип запроса
+                        url: "/department/all/"+site_id, // Путь к сценарию, обработающему запрос
+                        dataType: "json", // Тип данных, в которых сервер должен прислать ответ
+                        data: "", // Строка запроса
+                        error: function () { // Обработчик, который будет запущен в случае неудачного запроса
+                            alert( "При выполнении запроса произошла ошибка :(" ); // Сообщение о неудачном запросе
+                        },
+                        success: function ( data ) { // Обработчик, который будет запущен после успешного запроса
+                            // В ответ на наш запрос сервер должен прислать массив значений
+                            // Мы его вставим в поле второго списка с помощью цикла for
+                            for ( var i = 0; i < data.length; i++ ) {
+                                // Каждое полученное значение вставим в список
+                                $( '#department_id' ).append( '<option value="' + data[i].department_id + '">' + data[i].department_name + '</option>' );
+                            }
+                        }
+                    });
+                }
+            });
+                $( '#site_id' ).change(function () {
+
+                    var site_id = $( this ).val();
+                    $( '#department_id' ).find('option').remove().end(); //удаляем старые значения
+
+                    $.ajax({
+                        type: "GET", // Тип запроса
+                        url: "/department/all/"+site_id, // Путь к сценарию, обработающему запрос
+                        dataType: "json", // Тип данных, в которых сервер должен прислать ответ
+                        data: "", // Строка запроса
+                        error: function () { // Обработчик, который будет запущен в случае неудачного запроса
+                            alert( "При выполнении запроса произошла ошибка :(" ); // Сообщение о неудачном запросе
+                        },
+                        success: function ( data ) { // Обработчик, который будет запущен после успешного запроса
+                            // В ответ на наш запрос сервер должен прислать массив значений
+                            // Мы его вставим в поле второго списка с помощью цикла for
+                            for ( var i = 0; i < data.length; i++ ) {
+                                // Каждое полученное значение вставим в список видов транспорта
+                                $( '#department_id' ).append( '<option value="' + data[i].department_id + '">' + data[i].department_name + '</option>' );
+                            }
+                        }
+                    });
+                });
+        }); // Функция ожидания загрузки документа jQuery
+    })(); // Немедленно вызываемая функция
+</script>
+{% endblock %}
