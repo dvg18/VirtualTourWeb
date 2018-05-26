@@ -1,0 +1,58 @@
+﻿# установка LAMP 
+# во время установки необходимо создать пароль для MySQL (ввод по два раза) и затем создать пароль для phpmyadmin
+sudo apt-get update 
+# раньше я прописывал sudo apt-get install apache2 mysql-server php5 phpmyadmin curl php5-cli, но на последней ubuntu нет такой версии php, поэтому смотрите сами, как лучше
+# поэтому я не уверен, какую версию php лучше ставить, можно попробовать так:
+
+sudo apt-get install apache2 mysql-server php7.0* phpmyadmin curl 
+
+#ссылки для работы phpmyadmin
+sudo ln -s /etc/phpmyadmin /var/www
+sudo ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf-enabled/phpmyadmin.conf
+
+
+####Настройка проекта для Apache (у кого уже настроен - пропустить)
+
+# скопировать файл $project_name.conf
+sudo cp $project_name.conf /etc/apache2/sites-available/$project_name.conf
+
+# Активируем сайт:
+sudo a2ensite $project_name
+# Активируем модуль mod-rewrite (в будущем, думаю, понадобиться):
+sudo a2enmod rewrite
+
+# создаём директории для проекта
+sudo mkdir -p /var/www/$project_name/public_html
+
+# И перезапускаем сервер:
+sudo service apache2 restart
+####
+
+## установка composer (пропустить, если есть)
+# лучше перейти в домашнюю директиорию
+cd ~
+curl -sS https://getcomposer.org/installer | php 
+# в той же директории
+mv composer.phar /usr/local/bin/composer
+##
+
+# установка Phinx
+# перейти в папку проекта
+cd /var/www/$project_name/public_html
+#команды дальше, возможно, будут работать и без sudo (по крайней мере Composer'у не нравится работать из под root)
+sudo php composer.phar require robmorgan/phinx
+#прописать на всякий случай, но может и не понадобиться:
+sudo php composer.phar install --no-dev
+
+#директории для Phinx
+sudo mkdir -p db/migrations db/seeds
+
+sudo vendor/bin/phinx init
+# отредактировать файл phinx.yml в корне проекта - задать пароль "pass" и имя БД OFTEAMCHAT в "name"  в разделе development
+
+###Применить миграцию
+sudo cp {файл_миграции} /var/www/$project_name/public_html/db/migrations/
+
+sudo vendor/bin/phinx migrate -e development
+
+sudo sed -i '22s/pwd/213/' /var/www/$project_name/public_html/phinx.yml
