@@ -7,9 +7,9 @@ $(document).ready(function() {
             {"data": "id", "title": "id"},
             {"data": "first_name", "title": "Имя"},
             {"data": "last_name", "title": "Фамилия"},
-            {"data": "department_id", "title": "Отдел"},
+            //{"data": "department_id", "title": "Отдел"},
             {"data": "role_id", "title": "Роль"},
-            {"data": "site_id", "title": "Сайт"},
+            //{"data": "site_id", "title": "Сайт"},
             {
                 "data": function (row) {
                     return '<a href="/user/login/'+row.id+'" target="_blank">Войти</a>'

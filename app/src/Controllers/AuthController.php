@@ -46,4 +46,6 @@ class AuthController extends Controller
         $this->auth->logout();
         return $response->withRedirect($this->router->pathFor('home'));
     }
+
+
 }

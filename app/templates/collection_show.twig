@@ -1,0 +1,39 @@
+{% extends "layout.twig" %}
+{% block scripts %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/image360.jquery.js"></script>
+    <style>
+        #test {
+            max-width: 500px;
+            min-width: 320px;
+            overflow: hidden;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        #test img {
+            width: 100%;
+            cursor: move;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <!-- <div id="page-wrapper" >
+         <div class="col-lg-12">
+             <h1 class="page-header">Коллекции</h1>
+         </div>-->
+    <div id="test">
+        {% for i in files %}
+            <img src="../../{{ path }}/{{ i }}">
+        {% endfor %}
+
+    </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $("#test").image360();
+        });
+    </script>
+{% endblock %}

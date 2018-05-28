@@ -1,4 +1,4 @@
-{% extends "Layout.twig" %}
+{% extends "loginLayout.twig" %}
 
 {% block content %}
     <div class="container">
@@ -8,6 +8,8 @@
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">Вход</div>
                     <div class="panel-body">
+                        <a href="{{ path_for('user.create') }}">Регистрация</a>
+                        <br> </br>
                         <form action="{{ path_for('auth.signin') }}" method="post" autocomplete="off">
                             <div class="form-group{{ errors.login ? ' has-error' : '' }}">
                                 <input type="text" name="login" id="login" placeholder="Username" value="{{ old.login }}"
@@ -27,6 +29,7 @@
 
                             {{ csrf.field | raw }}
                         </form>
+
                     </div>
                 </div>
             </div>

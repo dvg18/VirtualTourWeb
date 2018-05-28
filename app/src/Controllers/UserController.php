@@ -69,20 +69,19 @@ class UserController extends Controller
             'first_name' => v::noWhitespace()->notEmpty(),
         ]);
 
-        if ($validation->failed()){
-            return $response->withRedirect($this->router->pathFor('user.create'));
-        }
-
+        /* if ($validation->failed()){
+             return $response->withRedirect($this->router->pathFor('user.create'));
+         }
+ */
         $user = User::create([
             'login' => $request->getParam('login'),
             'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT), //, ['cost' => 10]),
             'last_name' => $request->getParam('last_name'),
             'first_name' => $request->getParam('first_name'),
             'info' => $request->getParam('info'),
-            'is_blocked' => $request->getParam('is_blocked'),
-            'department_id' => $request->getParam('department_id'),
-            'role_id' => $request->getParam('role_id'),
-            'site_id' => $request->getParam('site_id')
+            //'is_blocked' => $request->getParam('is_blocked'),
+            'role_id' => 2//$request->getParam('role_id'),
+            //'site_id' => $request->getParam('site_id')
         ]);
         return "id: " . (string)$user['id'];
     }
@@ -98,10 +97,9 @@ class UserController extends Controller
         $user->last_name = $request->getParam('last_name');
         $user->first_name = $request->getParam('first_name');
         $user->info = $request->getParam('info');
-        $user->is_blocked = $request->getParam('is_blocked');
-        $user->department_id = $request->getParam('department_id');
+        //  $user->is_blocked = $request->getParam('is_blocked');
         $user->role_id = $request->getParam('role_id');
-        $user->site_id = $request->getParam('site_id');
+        // $user->site_id = $request->getParam('site_id');
 
         $user->save();
         return (string)$user['id'];

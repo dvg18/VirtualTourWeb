@@ -3,6 +3,7 @@
 /logs/*
 /log/*
 /cache/*
+/tmp/*
 /.idea/*
 /directory/*
 .env
@@ -13,3 +14,6 @@ composer.lock
 
 
 
+.idea/
+cache/
+tmp/

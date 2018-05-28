@@ -11,7 +11,7 @@ use App\Models\Department;
 
 class Departments
 {
-    public function getDepartments() {
+    /*public function getDepartments() {
         return Department::all();
-    }
+    }*/
 }

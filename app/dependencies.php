@@ -33,12 +33,16 @@ $container['view'] = function ($container) {
         'all' => $container->role->getRoles(),
     ]); //, $container->role);
 
-    $view->getEnvironment()->addGlobal('department', [
-        'all' => $container->department->getDepartments(),
-    ]);
+    /*    $view->getEnvironment()->addGlobal('department', [
+            'all' => $container->department->getDepartments(),
+        ]);
 
-    $view->getEnvironment()->addGlobal('site', [
-        'all' => $container->site->getSites(),
+        $view->getEnvironment()->addGlobal('site', [
+            'all' => $container->site->getSites(),
+        ]);*/
+    $view->getEnvironment()->addGlobal('collection', [
+        'all' => $container->collection->getCollections(),
+        //'show' => $container->collection->show(),
     ]);
     return $view;
 };
@@ -56,11 +60,14 @@ $container['auth'] = function ($container) {
 $container['role'] = function ($container) {
     return new App\Classes\Role;
 };
-$container['department'] = function ($container) {
+/*$container['department'] = function ($container) {
     return new App\Classes\Departments;
-};
+};*/
 $container['site'] = function ($container) {
     return new App\Classes\Sites;
+};
+$container['collection'] = function ($container) {
+    return new App\Classes\Collections;
 };
 $container['validator'] = function ($container) {
     return new App\Classes\Validation\Validator();
@@ -131,4 +138,7 @@ $container['DepartmentController'] = function ($container) {
 
 $container['SiteController'] = function ($container) {
     return new App\Controllers\SiteController($container);
+};
+$container['CollectionController'] = function ($container) {
+    return new App\Controllers\CollectionController($container);
 };

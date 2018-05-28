@@ -17,7 +17,7 @@ class Role
         $user = User::find($_SESSION['user']);
 
         //return UserRole::find($user->role_id);
-        return UserRole::where('role_id', $user->role_id)->first();
+        return UserRole::where('id', $user->role_id)->first();
     }
     public function getRoles() {
         return UserRole::all();

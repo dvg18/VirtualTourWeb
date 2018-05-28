@@ -1,0 +1,30 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-2">
+                <div class="title">
+                    <h2>Коллекция</h2>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Добавить коллекцию</div>
+                    <div class="panel-body">
+                        <form action="{{ path_for('collection.create') }}" method="post" autocomplete="off">
+                            <div class="form-group">
+                                <label for="name">Название</label>
+                                <input type="text" name="name" id="name" class="form-control" required>
+                            </div>
+                            <!--<div class="form-group">
+                                <label>Описание</label>
+                                <textarea type="text" name="description" id="description" class="form-control" > </textarea>
+                            </div>-->
+                            <button type="submit" class="btn btn-lg btn-success btn-block">Добавить</button>
+                            {#{{ csrf.field | raw }}#}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
