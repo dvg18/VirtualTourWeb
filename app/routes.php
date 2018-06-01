@@ -188,10 +188,12 @@ $app->post('/', 'HomeController:index')->setName('home');
 $app->group('', function () {
     $this->get('/login', 'AuthController:getSignIn')->setName('auth.signin');
     $this->post('/login', 'AuthController:postSignIn');
+    $this->post('/signin', 'AuthController:postSignInBasic');
 })->add(new GuestMiddleware($container));
 
+
 $app->group('', function () {
-    $this->get('/auth/signout', 'AuthController:getSignOut')->setName('auth.signout');
+    $this->get('/signout', 'AuthController:getSignOut')->setName('auth.signout');
 })->add(new AuthMiddleware($container));
 
 $app->get('/signup', 'UserController:getCreate')->setName('user.create');
@@ -204,7 +206,7 @@ $app->group('', function () {
     $this->get('/collection/create', 'CollectionController:getCreate')->setName('collection.create');
     $this->post('/collection/create', 'CollectionController:postCreate'); //<<--------------------------ЗАГЛУШКА
 
-    $this->get('/collection', 'CollectionController:collection')->setName('collection');
+    $this->get('/collection', 'CollectionController:collection')->setName('collection.all');
     $this->get('/collection/edit/{id}', 'CollectionController:edit')->setName('collection.edit');
 
     $this->get('/collection/show/{id}', 'CollectionController:show')->setName('collection.show');

@@ -14,7 +14,7 @@ use App\Models\UserCollection;
 
 class CollectionController extends Controller
 {
-    protected $FILES_DIRECTORY = '../tmp/images/';
+    protected $FILES_DIRECTORY = 'tmp/images/';
 
     public function upload($request, $response)
     {
@@ -39,12 +39,12 @@ class CollectionController extends Controller
             return;
         }
 
-        /*  $imageinfo = getimagesize($_FILES['uploads']['tmp_name']);
+          $imageinfo = getimagesize($_FILES["uploads"]["tmp_name"]);
           if($imageinfo['mime'] != 'image/gif' && $imageinfo['mime'] != 'image/jpeg'
               && $imageinfo['mime'] != 'image/jpg' && $imageinfo['mime'] != 'image/png') {
               echo "Sorry, we only accept GIF, PNG and JPEG images\n";
               return;
-          }*/
+          }
 
         $user = User::where('login', $login)->first();
         $count = 0;
@@ -64,14 +64,15 @@ class CollectionController extends Controller
                 mkdir($dir, 0777, TRUE);
                 echo $dir . ' created';
             }
-            foreach ($_FILES["uploads"]["error"] as $key => $error) {
-                if ($error == UPLOAD_ERR_OK) {
-                    $tmp_name = $_FILES["uploads"]["tmp_name"][$key];
-                    $name = $dir . $_FILES["uploads"]["name"][$key];
+            $name = $dir . $_FILES["uploads"]["name"];
+            //foreach ($_FILES["uploads"]["error"] as $key => $error) {
+                if ($_FILES["uploads"]["error"] == UPLOAD_ERR_OK) {
+                    $tmp_name = $_FILES["uploads"]["tmp_name"];//[$key];
+              //      $name = $dir . $_FILES["uploads"]["name"][$key];
                     move_uploaded_file($tmp_name, "$name");
-                    //unset($_FILES['upload'][$key]);
+                    //unset($_FILES['uploads'][$key]);
                 }
-            }
+            //}
             $count++;
             $collection->image_count = $count;
             try {
@@ -137,7 +138,7 @@ class CollectionController extends Controller
 
     public function getCreate($request, $response)
     {
-        return $this->container->view->render($response, '$collection_create.twig');
+        return $this->container->view->render($response, 'collection_create.twig');
     }
 
     public function postCreate($request, $response)

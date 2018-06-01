@@ -23,9 +23,9 @@ class HomeController extends Controller
 
         switch ($role) {
             case 'admin' :
-                return $response->withRedirect($this->router->pathFor('user.list'));
+                return $response->withRedirect($this->router->pathFor('user.all'));
             case 'user' :
-                return $response->withRedirect($this->router->pathFor('collection.list'));
+                return $response->withRedirect($this->router->pathFor('collection.all'));
             default :
                 return $response->withRedirect($this->router->pathFor('auth.signout')); //нужно направить на какую-нибудь страницу с ошибкой
         }

@@ -6,7 +6,7 @@ $(document).ready(function () {
         "columns": [
             {"data": "id", "title": "id"},
             {"data": "name", "title": "Имя"},
-            {"data": "user_id", "title": "Пользователь"},
+            //{"data": "user_id", "title": "Пользователь"},
             {"data": "image_count", "title": "Колличество фото"},
             {"data": "isPublic", "title": "Опубликовано"},
             {

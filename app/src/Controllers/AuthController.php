@@ -41,6 +41,41 @@ class AuthController extends Controller
         return $response->withRedirect($this->router->pathFor('home'));
     }
 
+  /*  public function getSignInBasic($request, $response)
+    {
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            header('WWW-Authenticate: Basic realm="My Realm"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Текст';
+            exit;
+        }
+        else return $this->container->view->render($response, 'login.twig');
+    }
+*/
+    public function postSignInBasic($request, $response)
+    {
+    /*    if (!isset($_SERVER['PHP_AUTH_USER']) || isset($_SERVER['PHP_AUTH_PW']))
+            return $response->withRedirect($this->router->pathFor('auth.signin.basic'));
+*/
+        $user = $_SERVER['PHP_AUTH_USER'];
+        $pass = $_SERVER['PHP_AUTH_PW'];
+
+        $auth = $this->auth->attempt(
+            $request->getParam('login'),
+            $request->getParam('password')
+        );
+
+        //$auth = $this->auth->attempt($user, $pass);
+
+        if (!$auth){
+            header('WWW-Authenticate: Basic realm="My Realm"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'false';
+            exit;
+        }
+        die("true");
+    }
+
     public function getSignOut($request, $response)
     {
         $this->auth->logout();
