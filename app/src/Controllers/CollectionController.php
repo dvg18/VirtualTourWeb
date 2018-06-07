@@ -31,20 +31,19 @@ class CollectionController extends Controller
         //$uploadFile = $uploadDir . basename($_FILES['uploads']['name']);
 
         $login = '';
-        if (isset($_POST['login'])) {//&& strlen($login) > 0) {
-            $login = $_POST['login'];
-            echo $login;
-        } else {
+        if (!isset($_POST['login'])) {//&& strlen($login) < 0) {
             echo 'You are not authorized';
             return;
         }
+        $login = $_POST['login'];
+        echo $login;
 
-          $imageinfo = getimagesize($_FILES["uploads"]["tmp_name"]);
-          if($imageinfo['mime'] != 'image/gif' && $imageinfo['mime'] != 'image/jpeg'
-              && $imageinfo['mime'] != 'image/jpg' && $imageinfo['mime'] != 'image/png') {
-              echo "Sorry, we only accept GIF, PNG and JPEG images\n";
-              return;
-          }
+        $imageinfo = getimagesize($_FILES["uploads"]["tmp_name"]);
+        if ($imageinfo['mime'] != 'image/gif' && $imageinfo['mime'] != 'image/jpeg'
+            && $imageinfo['mime'] != 'image/jpg' && $imageinfo['mime'] != 'image/png') {
+            echo "Sorry, we only accept GIF, PNG and JPEG images\n";
+            return;
+        }
 
         $user = User::where('login', $login)->first();
         $count = 0;
@@ -66,15 +65,16 @@ class CollectionController extends Controller
             }
             $name = $dir . $_FILES["uploads"]["name"];
             //foreach ($_FILES["uploads"]["error"] as $key => $error) {
-                if ($_FILES["uploads"]["error"] == UPLOAD_ERR_OK) {
-                    $tmp_name = $_FILES["uploads"]["tmp_name"];//[$key];
-              //      $name = $dir . $_FILES["uploads"]["name"][$key];
-                    move_uploaded_file($tmp_name, "$name");
-                    //unset($_FILES['uploads'][$key]);
-                }
+            if ($_FILES["uploads"]["error"] == UPLOAD_ERR_OK) {
+                $tmp_name = $_FILES["uploads"]["tmp_name"];//[$key];
+                //      $name = $dir . $_FILES["uploads"]["name"][$key];
+                move_uploaded_file($tmp_name, "$name");
+                //unset($_FILES['uploads'][$key]);
+                $count++;
+                $collection->image_count = $count;
+            }
             //}
-            $count++;
-            $collection->image_count = $count;
+
             try {
                 $collection->save();
             } catch (\Exception $e) {
@@ -112,6 +112,11 @@ class CollectionController extends Controller
         if ($args['id'] <= 0) return 'Неверный id';
 
         $collection = UserCollection::findOrFail($args['id']);
+        if ($collection->isPublic == 0) {
+            $collection->isPublic = "Нет";
+        } elseif ($collection->isPublic == 1) {
+            $collection->isPublic = "Да";
+        }
         return json_encode($collection);
     }
 
@@ -126,6 +131,11 @@ class CollectionController extends Controller
                 $output = array();
                 $collections = UserCollection::where('user_id', $user->id)->get();
                 foreach ($collections as $collection) {
+                    if ($collection->isPublic == 0) {
+                        $collection->isPublic = "Нет";
+                    } elseif ($collection->isPublic == 1) {
+                        $collection->isPublic = "Да";
+                    }
                     array_push($output, $collection);
                 }
                 return $response->withJson($output);
@@ -135,6 +145,21 @@ class CollectionController extends Controller
         return $response->withJson(UserCollection::findorFail($args['id']));
     }
 
+    public function publicList($request, $response, $args)
+    {
+        $collections = $this->container->collection->getPublic();
+        $output = array();
+        foreach ($collections as $collection) {
+            array_push($output, $collection);
+        }
+        return $response->withJson($output);
+        //return $response->withJson(UserCollection::findorFail($args['id']));
+    }
+
+    public function getPublic($request, $response)
+    {
+        return $this->container->view->render($response, 'collection_public.twig');
+    }
 
     public function getCreate($request, $response)
     {
@@ -168,13 +193,17 @@ class CollectionController extends Controller
         if ($args['id'] <= 0) return 'Неверный id';
 
         $collection = UserCollection::findOrFail($args['id']);
+        foreach ($request->getParsedBody() as $param) {
+            $collection->{$param['name']} = $param['value'];
+        }
         //$department->department_id = $request->getParam('id');
-        $collection->name = $request->getParam('name');
-        $collection->isPublic = $request->getParam('isPublic');
+        //$collection->name = $request->getParam('name');
+        //$collection->isPublic = $request->getParam('isPublic');
         //$collection->description = $request->getParam('description');
         //$collection->site_id = $request->getParam('site_id');
         try {
             $collection->save();
+            return $response->withJson(["data" => ["id" => $collection->id]]);
         } catch (\Exception $e) {
             return $response->withJson(
                 [

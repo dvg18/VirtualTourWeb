@@ -10,15 +10,22 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Добавить коллекцию</div>
                     <div class="panel-body">
-                        <form action="{{ path_for('collection.create') }}" method="post" autocomplete="off">
+                        <form action="{{ path_for('collection.upload') }}" method="post" autocomplete="off"
+                              enctype='multipart/form-data'>
+                            <input type='hidden' name='login' value="{{ auth.user.login }}"/>
                             <div class="form-group">
                                 <label for="name">Название</label>
-                                <input type="text" name="name" id="name" class="form-control" required>
+                                <input type="text" name="date" id="name" class="form-control" required>
                             </div>
-                            <!--<div class="form-group">
-                                <label>Описание</label>
-                                <textarea type="text" name="description" id="description" class="form-control" > </textarea>
+                           <!-- <div class="form-group">
+                                <label for="date">Дата</label>
+                                <input type='date' name='date' id="date" class="form-control" required/>
                             </div>-->
+                            <div class="form-group">
+                                <label>Файл</label>
+                                <input type='file' name='uploads' required/>
+                            </div>
+
                             <button type="submit" class="btn btn-lg btn-success btn-block">Добавить</button>
                             {#{{ csrf.field | raw }}#}
                         </form>

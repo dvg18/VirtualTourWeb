@@ -5,7 +5,7 @@ use App\Middleware\GuestMiddleware;
 use App\Middleware\RoleMiddleware;
 
 //сохранить диалог
-
+/*
 $app->post('/chat', function ($request, $response) {
     $json_data = $request->getParsedBody();
     $visitor = $json_data['visitor'];
@@ -153,7 +153,7 @@ $app->group('', function () {
     });
 
 })->add(new RoleMiddleware($container, 'owner'));
-
+*/
 
 /*$app->group('', function () {
     $this->get('/admin', function ($request, $response, $args) {
@@ -169,18 +169,18 @@ $app->group('', function () {
     })->setName('auth.owner');
 })->add(new RoleMiddleware($container, 'owner'));
 */
-
+/*
 $app->group('', function () {
     $this->get('/operator', 'OperatorController:redirectOperator')->setName('auth.operator');
-
+*/
     /***Для работы на localhost***/
-
+/*
     $this->get('/operator-test-page', function ($request, $response, $args) {
-        return $this->view->render($response, 'operator.twig');
+        return $this->view->render($response, 'collection_public.twig');
     });
-
-    /*** ***/
-})->add(new RoleMiddleware($container, 'operator'));
+*/
+    /*** ***//*
+})->add(new RoleMiddleware($container, 'operator'));*/
 
 $app->get('/', 'HomeController:index')->setName('home');
 $app->post('/', 'HomeController:index')->setName('home');
@@ -200,6 +200,9 @@ $app->get('/signup', 'UserController:getCreate')->setName('user.create');
 $app->post('/signup', 'UserController:postCreate');
 
 $app->post('/upload', 'CollectionController:upload')->setName('collection.upload');
+$app->get('/public', 'CollectionController:getPublic')->setName('collection.public');
+$app->get('/public/list', 'CollectionController:publicList')->setName('collection.public.list');
+$app->get('/public/{id}', 'CollectionController:show')->setName('collection.public.read');
 
 $app->group('', function () {
 
@@ -208,11 +211,13 @@ $app->group('', function () {
 
     $this->get('/collection', 'CollectionController:collection')->setName('collection.all');
     $this->get('/collection/edit/{id}', 'CollectionController:edit')->setName('collection.edit');
-
     $this->get('/collection/show/{id}', 'CollectionController:show')->setName('collection.show');
 // api
+
     $this->get('/collection/list', 'CollectionController:list')->setName('collection.list');
+    $this->get('/collection/{id}', 'CollectionController:read')->setName('collection.read');
     $this->put('/collection/{id}', 'CollectionController:update');
+    $this->delete('/collection/{id}', 'CollectionController:delete');
 
 })->add(new AuthMiddleware($container));
 
@@ -221,7 +226,7 @@ $app->group('', function () {
     /***** User CRUD *****/
 
     $this->get('/user', 'UserController:user')->setName('user.all');
-    $this->get('/user/login/{id}', 'UserController:directLogin')->setName('user.direct');
+    //$this->get('/user/login/{id}', 'UserController:directLogin')->setName('user.direct');
 
     $this->get('/user/create', 'UserController:getCreate')->setName('user.create');
     $this->post('/user/create', 'UserController:postCreate');
@@ -233,13 +238,13 @@ $app->group('', function () {
     $this->delete('/user/{id}', 'UserController:delete');
 
 //api
-    $this->get('/user/role/{id}', 'UserController:role');
+    //$this->get('/user/role/{id}', 'UserController:role');
 
     /***** ******/
 
     /***** Department CRUD *****/
 
-    $this->get('/department/all', 'DepartmentController:readAll');
+/*    $this->get('/department/all', 'DepartmentController:readAll');
     $this->get('/department/all/{site_id}', 'DepartmentController:readSite');
     $this->get('/department', 'DepartmentController:department')->setName('department');
 
@@ -253,13 +258,13 @@ $app->group('', function () {
 
     $this->put('/department/{id}', 'DepartmentController:update');
     $this->delete('/department/{id}', 'DepartmentController:delete');
-
+*/
     /***** ******/
 
     /**operator api**/
-    $this->get('/operators', 'OperatorController:dropdownOperator')->setName('dropdownOperator');
+    //$this->get('/operators', 'OperatorController:dropdownOperator')->setName('dropdownOperator');
 
-    /** site **/
+    /** site **//*
     $this->get('/site/create', 'SiteController:getCreate')->setName('site.create');
     $this->post('/site/create', 'SiteController:postCreate'); //<<--------------------------ЗАГЛУШКА
 
@@ -269,6 +274,6 @@ $app->group('', function () {
     $this->get('/site/list', 'SiteController:list')->setName('site.list');
     $this->put('/site/{id}', 'SiteController:update');
 
-    $this->get('/sites', 'SiteController:dropdownSite');
+    $this->get('/sites', 'SiteController:dropdownSite');*/
 
 })->add(new RoleMiddleware($container, 'owner'));

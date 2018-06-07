@@ -24,9 +24,10 @@ class Collections
         return UserCollection::all();
     }
 
-    /* public function show (){
-         return $this->getFiles();
-     }*/
+     public function getPublic(){
+         $collections = UserCollection::where("isPublic", 1)->get();
+         return $collections;
+     }
     public static function getFiles($id, $path)
     {
         $collection = UserCollection::findOrFail($id);

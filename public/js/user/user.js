@@ -9,12 +9,14 @@ $(document).ready(function() {
             {"data": "last_name", "title": "Фамилия"},
             //{"data": "department_id", "title": "Отдел"},
             {"data": "role_id", "title": "Роль"},
+            {"data": "created_at", "title": "Создан"},
+            {"data": "updated_at", "title": "Обновлен"},
             //{"data": "site_id", "title": "Сайт"},
-            {
+            /*{
                 "data": function (row) {
                     return '<a href="/user/login/'+row.id+'" target="_blank">Войти</a>'
                 }, "title": "Вход"
-            }
+            }*/
         ]
     });
 

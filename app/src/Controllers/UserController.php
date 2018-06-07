@@ -18,12 +18,12 @@ class UserController extends Controller
 
         return $this->container->view->render($response, 'user.twig');
     }
-
+    /*
     public function directLogin($request, $response, $args){
         $_SESSION['user'] = $args['id'];
         return $response->withRedirect($this->router->pathFor('home'));
     }
-
+*/
     public function read($request, $response, $args)
     {
         if ($args['id'] <= 0) return 'Неверный id';
@@ -117,7 +117,7 @@ class UserController extends Controller
     //Метод нужен был для выпадающего списка Владелец сайта, возможно надо будет доработать т.к.
     // если запрос от дамина, то он может посмотреть пользователей по role_id,
     // но если от владельца сайта - он же и возвращается. 
-    public function role($request, $response, $args){
+   /* public function role($request, $response, $args){
         $user = $this->auth->user();
 
         if ($args['id'] <= 0)
@@ -132,5 +132,5 @@ class UserController extends Controller
             $users[] = $user; //на странице ожидается массив, поэтому даже 1 юзера ложим в массив
             return $response->withJson($users);
         }
-    }
+    }*/
 }

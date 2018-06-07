@@ -6,16 +6,31 @@
         </div>
         <form id="collection-edit-form">
             <div class="form-group">
-                <input type="hidden" value="{{ collection.all.id }}" name="id"/>
+                <input type="hidden" value="{{ collection.id }}" name="id"/>
                 <label for="collection">Коллекция</label>
                 <input type="text" class="form-control" name="name" id="collection" placeholder="Сollection"
                        value="{{ collection.name }}">
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label for="isPublic">Опубликовано</label>
                 <input type="checkbox" class="form-control" name="isPublic" id="isPublic"
                        value="{{ collection.isPublic }}">
-            </div>
+            </div>-->
+            <fieldset class="form-group">
+                <label for="isPublic">Опубликовано</label>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="isPublic" id="isPublic" value="1">
+                        Да
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="isPublic" id="isPublic" value="0" checked>
+                        Нет
+                    </label>
+                </div>
+            </fieldset>
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </form>
     </div>

@@ -4,22 +4,15 @@ $(document).ready(function () {
         "processing": true,
         language: datatableLang,
         "columns": [
-            {"data": "id", "title": "id"},
             {"data": "name", "title": "Имя"},
             //{"data": "user_id", "title": "Пользователь"},
             {"data": "image_count", "title": "Колличество фото"},
-            {"data": "isPublic", "title": "Опубликована"},
             {"data": "created_at", "title": "Создана"},
             {"data": "updated_at", "title": "Обновлена"},
             {
                 "data": function (row) {
-                    return '<a href="/collection/show/' + row.id + '" target="_blank">Открыть</a>'
+                    return '<a href="/public/' + row.id + '" target="_blank">Открыть</a>'
                 }, "title": "Открыть"
-            },
-            {
-                "data": function (row) {
-                    return '<a href="/collection/edit/' + row.id + '" target="_blank">ред.</a>'
-                }, "title": "Ред."
             }
         ]
     });
@@ -36,7 +29,7 @@ $(document).ready(function () {
             type: "GET",
             cache: false,
             async: true,
-            url: "/collection/list",
+            url: "/public/list",
             data: $('#collection-filter').serialize(),
             contentType: "application/json;"
         }).done(function (resp) {

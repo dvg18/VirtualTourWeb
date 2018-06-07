@@ -18,7 +18,7 @@ class UserCollection extends Model
         'name',
         'password',
         'image_count',
-        'isPublic',
+        '',
         'user_id',
     ];
 
