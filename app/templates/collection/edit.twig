@@ -2,12 +2,12 @@
 {% block content %}
     <div id="page-wrapper">
         <div class="col-lg-12">
-            <h1 class="page-header">Настройки сайта - Редактировать</h1>
+            <h1 class="page-header">Обзор - Редактировать</h1>
         </div>
         <form id="collection-edit-form">
             <div class="form-group">
                 <input type="hidden" value="{{ collection.id }}" name="id"/>
-                <label for="collection">Коллекция</label>
+                <label for="collection">Обзор</label>
                 <input type="text" class="form-control" name="name" id="collection" placeholder="Сollection"
                        value="{{ collection.name }}">
             </div>

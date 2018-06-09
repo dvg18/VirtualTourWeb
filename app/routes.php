@@ -183,7 +183,6 @@ $app->group('', function () {
 })->add(new RoleMiddleware($container, 'operator'));*/
 
 $app->get('/', 'HomeController:index')->setName('home');
-$app->post('/', 'HomeController:index')->setName('home');
 
 $app->group('', function () {
     $this->get('/login', 'AuthController:getSignIn')->setName('auth.signin');
@@ -206,39 +205,36 @@ $app->get('/public/{id}', 'CollectionController:show')->setName('collection.publ
 
 $app->group('', function () {
 
-    $this->get('/collection/create', 'CollectionController:getCreate')->setName('collection.create');
-    $this->post('/collection/create', 'CollectionController:postCreate'); //<<--------------------------ЗАГЛУШКА
-
     $this->get('/collection', 'CollectionController:collection')->setName('collection.all');
+    $this->get('/collection/create', 'CollectionController:getCreate')->setName('collection.create');
+    $this->post('/collection/create', 'CollectionController:postCreate');
     $this->get('/collection/edit/{id}', 'CollectionController:edit')->setName('collection.edit');
     $this->get('/collection/show/{id}', 'CollectionController:show')->setName('collection.show');
 // api
-
     $this->get('/collection/list', 'CollectionController:list')->setName('collection.list');
     $this->get('/collection/{id}', 'CollectionController:read')->setName('collection.read');
     $this->put('/collection/{id}', 'CollectionController:update');
     $this->delete('/collection/{id}', 'CollectionController:delete');
-
 })->add(new AuthMiddleware($container));
 
 $app->group('', function () {
 
-    /***** User CRUD *****/
-
     $this->get('/user', 'UserController:user')->setName('user.all');
-    //$this->get('/user/login/{id}', 'UserController:directLogin')->setName('user.direct');
-
-    $this->get('/user/create', 'UserController:getCreate')->setName('user.create');
-    $this->post('/user/create', 'UserController:postCreate');
-
+// api
     $this->get('/user/list', 'UserController:list')->setName('user.list');
     $this->get('/user/{id}', 'UserController:read');
     $this->post('/user', 'UserController:postCreate');
     $this->put('/user/{id}', 'UserController:update');
     $this->delete('/user/{id}', 'UserController:delete');
+})->add(new RoleMiddleware($container, 'admin'));
 
+
+
+/***** User CRUD *****/
 //api
     //$this->get('/user/role/{id}', 'UserController:role');
+
+//$this->get('/user/login/{id}', 'UserController:directLogin')->setName('user.direct');
 
     /***** ******/
 
@@ -276,4 +272,4 @@ $app->group('', function () {
 
     $this->get('/sites', 'SiteController:dropdownSite');*/
 
-})->add(new RoleMiddleware($container, 'owner'));
+//})->add(new RoleMiddleware($container, 'owner'));

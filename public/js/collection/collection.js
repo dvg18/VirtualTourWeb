@@ -8,9 +8,9 @@ $(document).ready(function () {
             {"data": "name", "title": "Имя"},
             //{"data": "user_id", "title": "Пользователь"},
             {"data": "image_count", "title": "Колличество фото"},
-            {"data": "isPublic", "title": "Опубликована"},
-            {"data": "created_at", "title": "Создана"},
-            {"data": "updated_at", "title": "Обновлена"},
+            {"data": "isPublic", "title": "Опубликован"},
+            {"data": "created_at", "title": "Создан"},
+            {"data": "updated_at", "title": "Обновлен"},
             {
                 "data": function (row) {
                     return '<a href="/collection/show/' + row.id + '" target="_blank">Открыть</a>'

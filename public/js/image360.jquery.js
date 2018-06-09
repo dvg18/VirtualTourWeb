@@ -36,11 +36,8 @@
                 var percent_img = 100 / (settings.count_loop * count_imgs);
                 if (Math.abs(percent_div - last_perc) > percent_img) {
                     last_perc = percent_div;
-                    if (direction) {
-                        index_img--;
-                    } else {
-                        index_img++;
-                    }
+                    if (direction) index_img--;
+                    else index_img++;
                     if (index_img < 0) index_img = (count_imgs - 1);
                     if (index_img > (count_imgs - 1)) index_img = 0;
                     $main_div.find("img").hide();
