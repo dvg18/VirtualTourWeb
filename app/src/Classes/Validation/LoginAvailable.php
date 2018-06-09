@@ -13,9 +13,12 @@ use Respect\Validation\Rules\AbstractRule;
 
 class LoginAvailable extends AbstractRule
 {
+    /**
+     * @param $input
+     * @return bool
+     */
     public function validate($input)
     {
-
         return User::where('login', $input)->count() === 0;
     }
 }

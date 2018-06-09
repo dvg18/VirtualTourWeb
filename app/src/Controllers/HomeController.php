@@ -12,7 +12,11 @@ use App\Classes\Role;
 
 class HomeController extends Controller
 {
-
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function index($request, $response)
     {
         //$this->logger->info("Home page action dispatched");

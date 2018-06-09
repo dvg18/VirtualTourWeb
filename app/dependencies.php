@@ -10,6 +10,10 @@ $container = $app->getContainer();
 // -----------------------------------------------------------------------------
 
 // Twig
+/**
+ * @param $container
+ * @return \Slim\Views\Twig
+ */
 $container['view'] = function ($container) {
     $settings = $container->get('settings')['view'];
     $view = new Slim\Views\Twig($settings['template_path'], $settings['twig'], [
@@ -76,10 +80,13 @@ $container['validator'] = function ($container) {
 // -----------------------------------------------------------------------------
 // Service factories
 // -----------------------------------------------------------------------------
-
 v::with('App\\Classes\\Validation\\');
 
-// monolog
+/**
+ * monolog
+ * @param $c
+ * @return \Monolog\Logger
+ */
 $container['logger'] = function ($c) {
     $settings = $c->get('settings')['logger'];
     $logger = new Monolog\Logger($settings['name']);
@@ -87,7 +94,10 @@ $container['logger'] = function ($c) {
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
     return $logger;
 };
-
+/**
+ * @param $c
+ * @return PDO
+ */
 $container['db'] = function ($c) {
     $settings = $c->get('settings')['db'];
     $pdo = new PDO("mysql:host=" . $settings['host'] . ";dbname=" . $settings['dbname'] . ";charset=UTF8",
@@ -97,7 +107,7 @@ $container['db'] = function ($c) {
         ));
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    
+
     return $pdo;
 
 };
@@ -105,7 +115,10 @@ $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db1']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
-
+/**
+ * @param $container
+ * @return \Illuminate\Database\Capsule\Manager
+ */
 $container['db1'] = function ($container) use ($capsule) {
     return $capsule;
 };

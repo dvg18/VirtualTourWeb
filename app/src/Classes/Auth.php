@@ -12,14 +12,25 @@ use App\Models\User;
 
 class Auth
 {
+    /**
+     * @return mixed
+     */
     public function user(){
         return User::find($_SESSION['user']);
     }
 
+    /**
+     * @return bool
+     */
     public function check(){
         return isset($_SESSION['user']);
     }
 
+    /**
+     * @param $login
+     * @param $password
+     * @return bool
+     */
     public function attempt($login, $password){
 
         $user = User::where('login', $login)->first();
@@ -36,6 +47,9 @@ class Auth
         return false;
     }
 
+    /**
+     *
+     */
     public function logout(){
         unset($_SESSION['user']);
     }

@@ -12,6 +12,9 @@ use Respect\Validation\Exceptions\ValidationException;
 
 class LoginAvailableException extends ValidationException
 {
+    /**
+     * @var array
+     */
     public static $defaultTemplates = [
       self::MODE_DEFAULT => [
           self::STANDARD => 'Логин уже используется.'

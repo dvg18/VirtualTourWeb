@@ -16,6 +16,10 @@ class CollectionController extends Controller
 {
     protected $FILES_DIRECTORY = 'tmp/images/';
 
+    /**
+     * @param $request
+     * @param $response
+     */
     public function upload($request, $response)
     {
         $blacklist = array(".php", ".phtml", ".php3", ".php4");
@@ -86,11 +90,23 @@ class CollectionController extends Controller
         }
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     public function collection($request, $response, $args)
     {
         return $this->container->view->render($response, 'collection.twig');
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     public function show($request, $response, $args)
     {
         //$files = Collections::getFiles($args['id'], $this->FILES_DIRECTORY);
@@ -106,7 +122,12 @@ class CollectionController extends Controller
         ]);
     }
 
-
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return string
+     */
     public function read($request, $response, $args)
     {
         if ($args['id'] <= 0) return 'Неверный id';
@@ -120,6 +141,12 @@ class CollectionController extends Controller
         return json_encode($collection);
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     public function list($request, $response, $args)
     {
         $role = $this->container->role->getUserRole();
@@ -145,6 +172,12 @@ class CollectionController extends Controller
         return $response->withJson(UserCollection::findorFail($args['id']));
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     public function publicList($request, $response, $args)
     {
         $collections = $this->container->collection->getPublic();
@@ -156,16 +189,31 @@ class CollectionController extends Controller
         //return $response->withJson(UserCollection::findorFail($args['id']));
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function getPublic($request, $response)
     {
         return $this->container->view->render($response, 'collection_public.twig');
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function getCreate($request, $response)
     {
         return $this->container->view->render($response, 'collection_create.twig');
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return string
+     */
     public function postCreate($request, $response)
     {
         $user = $this->container->auth->user();
@@ -178,6 +226,12 @@ class CollectionController extends Controller
         return "id: " . (string)$collection['id'];
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     public function edit($request, $response, $args)
     {
         $collection = UserCollection::findOrFail($args['id']);
@@ -188,6 +242,12 @@ class CollectionController extends Controller
         );
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return string
+     */
     public function update($request, $response, $args)
     {
         if ($args['id'] <= 0) return 'Неверный id';
@@ -213,6 +273,12 @@ class CollectionController extends Controller
         return (string)$collection['id'];
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return string
+     */
     public function delete($request, $response, $args)
     {
         if ($args['id'] <= 0) return 'Неверный id';

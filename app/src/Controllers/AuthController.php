@@ -12,11 +12,21 @@ use Respect\Validation\Validator as v;
 
 class AuthController extends Controller
 {
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function getSignIn($request, $response)
     {
         return $this->container->view->render($response, 'login.twig');
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function postSignIn($request, $response)
     {
         $validation = $this->validator->validate($request, [
@@ -52,6 +62,10 @@ class AuthController extends Controller
         else return $this->container->view->render($response, 'login.twig');
     }
 */
+    /**
+     * @param $request
+     * @param $response
+     */
     public function postSignInBasic($request, $response)
     {
     /*    if (!isset($_SERVER['PHP_AUTH_USER']) || isset($_SERVER['PHP_AUTH_PW']))
@@ -76,6 +90,11 @@ class AuthController extends Controller
         die("true");
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function getSignOut($request, $response)
     {
         $this->auth->logout();

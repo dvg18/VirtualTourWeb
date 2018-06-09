@@ -12,8 +12,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserCollection extends Model
 {
+    /**
+     * @var string
+     */
     protected $table = 'UserCollection';
-
+    /**
+     * @var array
+     */
     protected $fillable = [
         'name',
         'password',

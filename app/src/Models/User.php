@@ -4,8 +4,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model {
+    /**
+     * @var string
+     */
     protected $table = 'User';
-
+    /**
+     * @var array
+     */
     protected $fillable = [
         'login',
         'password',

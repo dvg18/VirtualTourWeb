@@ -14,6 +14,12 @@ use Respect\Validation\Validator as v;
 
 class UserController extends Controller
 {
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     public function user($request, $response, $args){
 
         return $this->container->view->render($response, 'user.twig');
@@ -24,6 +30,12 @@ class UserController extends Controller
         return $response->withRedirect($this->router->pathFor('home'));
     }
 */
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return string
+     */
     public function read($request, $response, $args)
     {
         if ($args['id'] <= 0) return 'Неверный id';
@@ -32,6 +44,12 @@ class UserController extends Controller
         return $response->withJson($user);
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     public function list($request, $response, $args){
         $role = $this->container->role->getUserRole();
         $user = $this->container->auth->user();
@@ -54,12 +72,22 @@ class UserController extends Controller
         return $response->withJson(User::findorFail($args['id']));
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function getCreate($request, $response)
     {
         return $this->container->view->render($response, 'user/create.twig');
         //return $response->withRedirect($this->router->pathFor('user.create'));
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return string
+     */
     public function postCreate($request, $response)
     {
         $validation = $this->validator->validate($request, [
@@ -86,7 +114,12 @@ class UserController extends Controller
         return "id: " . (string)$user['id'];
     }
 
-
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return string
+     */
     public function update($request, $response, $args)
     {
         if ($args['id'] <= 0) return 'Неверный id';
@@ -105,6 +138,12 @@ class UserController extends Controller
         return (string)$user['id'];
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @param $args
+     * @return string
+     */
     public function delete($request, $response, $args)
     {
         if ($args['id'] <= 0) return 'Неверный id';

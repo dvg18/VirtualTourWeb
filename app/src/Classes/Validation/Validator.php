@@ -13,7 +13,16 @@ use Respect\Validation\Exceptions\NestedValidationException;
 
 class Validator
 {
+    /**
+     * @var
+     */
     protected $errors;
+
+    /**
+     * @param $request
+     * @param array $rules
+     * @return $this
+     */
     public function validate($request, array $rules){
 
         foreach ($rules as $field => $rule)
@@ -30,6 +39,10 @@ class Validator
         return $this;
     }
 
+    /**
+     * @param $request
+     * @return bool
+     */
     public function failed($request){
 
         return !empty($this->errors);
