@@ -71,10 +71,10 @@ class CollectionController extends Controller
         $user = User::where('login', $login)->first();
         $count = 0;
 
-        $collection = UserCollection::where('name', $_POST['date'])->first();
+        $collection = UserCollection::where('name', $_POST['name'])->first();
         if ($collection == null) {
             $collection = UserCollection::create([
-                'name' => $_POST['date'],
+                'name' => $_POST['name'],
                 'user_id' => $user->id
             ]);
         } else {
@@ -93,8 +93,8 @@ class CollectionController extends Controller
             move_uploaded_file($tmp_name, "$name");
             $ratio = 1.0;
             list($width, $height) = getimagesize($name);
-            if ((($width - 512) > $this->RESOLUTION) || (($height - 512) > $this->RESOLUTION)) { //не сжимаем, если разрешение больше всего на 512 точек
-                if ($width > $height) {
+            if ((($width - 512) > $this->RESOLUTION) || (($height - 512) > $this->RESOLUTION)) { //не сжимаем,
+                if ($width > $height) {                                  // если разрешение больше всего на 512 точек
                     $ratio = $width / $height;
                     $new_width = $this->RESOLUTION;
                     $new_height = $new_width / $ratio;
