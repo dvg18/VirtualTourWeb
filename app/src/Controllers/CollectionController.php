@@ -14,11 +14,20 @@ use App\Models\UserCollection;
 
 class CollectionController extends Controller
 {
+    /**
+     * @var string
+     */
     protected $FILES_DIRECTORY = 'tmp/images/';
+
+    /**
+     * @var int
+     */
+    protected $RESOLUTION = 2048;
 
     /**
      * @param $request
      * @param $response
+     * @return mixed
      */
     public function upload($request, $response)
     {
@@ -42,6 +51,16 @@ class CollectionController extends Controller
         $login = $_POST['login'];
         echo $login;
 
+        if (!isset($_POST['name'])) {
+            echo "Sorry, you didn't write name";
+            return;
+        }
+
+        if (!$_FILES) {
+            echo "Sorry, you didn't send file";
+            return;
+        }
+
         $imageinfo = getimagesize($_FILES["uploads"]["tmp_name"]);
         if ($imageinfo['mime'] != 'image/gif' && $imageinfo['mime'] != 'image/jpeg'
             && $imageinfo['mime'] != 'image/jpg' && $imageinfo['mime'] != 'image/png') {
@@ -51,42 +70,60 @@ class CollectionController extends Controller
 
         $user = User::where('login', $login)->first();
         $count = 0;
-        if ($_FILES) {
-            if (!isset($_POST['date'])) return;
-            $collection = UserCollection::where('name', $_POST['date'])->first();
-            if ($collection == null) {
-                $collection = UserCollection::create([
-                    'name' => $_POST['date'],
-                    'user_id' => $user->id
-                ]);
-            } else {
-                $count = $collection->image_count;
-            }
-            $dir = $this->FILES_DIRECTORY . $login . '/' . $collection->id . '/';
-            if (!is_dir($dir)) {
-                mkdir($dir, 0777, TRUE);
-                echo $dir . ' created';
-            }
-            $name = $dir . $_FILES["uploads"]["name"];
-            //foreach ($_FILES["uploads"]["error"] as $key => $error) {
-            if ($_FILES["uploads"]["error"] == UPLOAD_ERR_OK) {
-                $tmp_name = $_FILES["uploads"]["tmp_name"];//[$key];
-                //      $name = $dir . $_FILES["uploads"]["name"][$key];
-                move_uploaded_file($tmp_name, "$name");
-                //unset($_FILES['uploads'][$key]);
-                $count++;
-                $collection->image_count = $count;
-            }
-            //}
 
-            try {
-                $collection->save();
-            } catch (\Exception $e) {
-                return $response->withJson(
-                    [
-                        'error' => ['code' => $e->getCode(), 'message' => $e->getMessage()]
-                    ]);
+        $collection = UserCollection::where('name', $_POST['date'])->first();
+        if ($collection == null) {
+            $collection = UserCollection::create([
+                'name' => $_POST['date'],
+                'user_id' => $user->id
+            ]);
+        } else {
+            $count = $collection->image_count;
+        }
+        $dir = $this->FILES_DIRECTORY . $login . '/' . $collection->id . '/';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, TRUE);
+            echo $dir . ' created';
+        }
+        $name = $dir . $_FILES["uploads"]["name"];
+        //foreach ($_FILES["uploads"]["error"] as $key => $error) {
+        if ($_FILES["uploads"]["error"] == UPLOAD_ERR_OK) {
+            $tmp_name = $_FILES["uploads"]["tmp_name"];//[$key];
+            //      $name = $dir . $_FILES["uploads"]["name"][$key];
+            move_uploaded_file($tmp_name, "$name");
+            $ratio = 1.0;
+            list($width, $height) = getimagesize($name);
+            if ((($width - 512) > $this->RESOLUTION) || (($height - 512) > $this->RESOLUTION)) { //не сжимаем, если разрешение больше всего на 512 точек
+                if ($width > $height) {
+                    $ratio = $width / $height;
+                    $new_width = $this->RESOLUTION;
+                    $new_height = $new_width / $ratio;
+                } else {
+                    $ratio = $height / $width;
+                    $new_height = $this->RESOLUTION;
+                    $new_width = $new_height / $ratio;
+                }
+                $image_p = imagecreatetruecolor($new_width, $new_height);
+                $image = imagecreatefromjpeg($name);
+                imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+
+                imagejpeg($image_p, $name, 90); //90 - это качество 0-100%
             }
+
+
+            //unset($_FILES['uploads'][$key]);
+            $count++;
+            $collection->image_count = $count;
+        }
+        //}
+
+        try {
+            $collection->save();
+        } catch (\Exception $e) {
+            return $response->withJson(
+                [
+                    'error' => ['code' => $e->getCode(), 'message' => $e->getMessage()]
+                ]);
         }
     }
 
